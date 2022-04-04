@@ -1,0 +1,380 @@
+fileFormatVersion: 2
+guid: fa7a8d3f4941a5a4aa4c64f8579c8093
+timeCreated: 1517095618
+licenseType: Free
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: BoneRoot
+    100002: L_Foot01_Floor01
+    100004: L_Foot01_Floor02
+    100006: L_Foot01_Floor03
+    100008: L_Foot01_Floor04
+    100010: L_Foot01_Floor05
+    100012: L_Foot01_Floor06
+    100014: L_Hand01_Floor01
+    100016: L_Hand01_Floor02
+    100018: L_Hand01_Floor03
+    100020: L_Hand01_Floor04
+    100022: L_Hand01_Floor05
+    100024: L_Hand01_Floor06
+    100026: mesh0
+    100028: mesh1
+    100030: mesh10
+    100032: mesh2
+    100034: mesh3
+    100036: mesh4
+    100038: mesh5
+    100040: mesh6
+    100042: mesh7
+    100044: mesh8
+    100046: mesh9
+    100048: R_Foot01_Floor01
+    100050: R_Foot01_Floor02
+    100052: R_Foot01_Floor03
+    100054: R_Foot01_Floor04
+    100056: R_Foot01_Floor05
+    100058: R_Foot01_Floor06
+    100060: R_Hand01_Floor01
+    100062: R_Hand01_Floor02
+    100064: R_Hand01_Floor03
+    100066: R_Hand01_Floor04
+    100068: R_Hand01_Floor05
+    100070: R_Hand01_Floor06
+    100072: RootNode(0)
+    100074: valvebiped.bip01_head1
+    100076: valvebiped.bip01_l_calf
+    100078: valvebiped.bip01_l_clavicle
+    100080: valvebiped.bip01_l_finger0
+    100082: valvebiped.bip01_l_finger01
+    100084: valvebiped.bip01_l_finger02
+    100086: valvebiped.bip01_l_finger1
+    100088: valvebiped.bip01_l_finger11
+    100090: valvebiped.bip01_l_finger12
+    100092: valvebiped.bip01_l_finger2
+    100094: valvebiped.bip01_l_finger21
+    100096: valvebiped.bip01_l_finger22
+    100098: valvebiped.bip01_l_finger3
+    100100: valvebiped.bip01_l_finger31
+    100102: valvebiped.bip01_l_finger32
+    100104: valvebiped.bip01_l_finger4
+    100106: valvebiped.bip01_l_finger41
+    100108: valvebiped.bip01_l_finger42
+    100110: valvebiped.bip01_l_foot
+    100112: valvebiped.bip01_l_forearm
+    100114: valvebiped.bip01_l_forearm_twist
+    100116: valvebiped.bip01_l_hand
+    100118: valvebiped.bip01_l_thigh
+    100120: valvebiped.bip01_l_toe0
+    100122: valvebiped.bip01_l_upperarm
+    100124: valvebiped.bip01_neck1
+    100126: valvebiped.bip01_pelvis
+    100128: valvebiped.bip01_r_calf
+    100130: valvebiped.bip01_r_clavicle
+    100132: valvebiped.bip01_r_finger0
+    100134: valvebiped.bip01_r_finger01
+    100136: valvebiped.bip01_r_finger02
+    100138: valvebiped.bip01_r_finger1
+    100140: valvebiped.bip01_r_finger11
+    100142: valvebiped.bip01_r_finger12
+    100144: valvebiped.bip01_r_finger2
+    100146: valvebiped.bip01_r_finger21
+    100148: valvebiped.bip01_r_finger22
+    100150: valvebiped.bip01_r_finger3
+    100152: valvebiped.bip01_r_finger31
+    100154: valvebiped.bip01_r_finger32
+    100156: valvebiped.bip01_r_finger4
+    100158: valvebiped.bip01_r_finger41
+    100160: valvebiped.bip01_r_finger42
+    100162: valvebiped.bip01_r_foot
+    100164: valvebiped.bip01_r_forearm
+    100166: valvebiped.bip01_r_forearm_twist
+    100168: valvebiped.bip01_r_hand
+    100170: valvebiped.bip01_r_thigh
+    100172: valvebiped.bip01_r_toe0
+    100174: valvebiped.bip01_r_upperarm
+    100176: valvebiped.bip01_spine
+    100178: valvebiped.bip01_spine1
+    100180: valvebiped.bip01_spine2
+    100182: valvebiped.j_mainroot
+    100184: valvebiped.tag_origin
+    100186: //RootNode
+    400000: BoneRoot
+    400002: L_Foot01_Floor01
+    400004: L_Foot01_Floor02
+    400006: L_Foot01_Floor03
+    400008: L_Foot01_Floor04
+    400010: L_Foot01_Floor05
+    400012: L_Foot01_Floor06
+    400014: L_Hand01_Floor01
+    400016: L_Hand01_Floor02
+    400018: L_Hand01_Floor03
+    400020: L_Hand01_Floor04
+    400022: L_Hand01_Floor05
+    400024: L_Hand01_Floor06
+    400026: mesh0
+    400028: mesh1
+    400030: mesh10
+    400032: mesh2
+    400034: mesh3
+    400036: mesh4
+    400038: mesh5
+    400040: mesh6
+    400042: mesh7
+    400044: mesh8
+    400046: mesh9
+    400048: R_Foot01_Floor01
+    400050: R_Foot01_Floor02
+    400052: R_Foot01_Floor03
+    400054: R_Foot01_Floor04
+    400056: R_Foot01_Floor05
+    400058: R_Foot01_Floor06
+    400060: R_Hand01_Floor01
+    400062: R_Hand01_Floor02
+    400064: R_Hand01_Floor03
+    400066: R_Hand01_Floor04
+    400068: R_Hand01_Floor05
+    400070: R_Hand01_Floor06
+    400072: RootNode(0)
+    400074: valvebiped.bip01_head1
+    400076: valvebiped.bip01_l_calf
+    400078: valvebiped.bip01_l_clavicle
+    400080: valvebiped.bip01_l_finger0
+    400082: valvebiped.bip01_l_finger01
+    400084: valvebiped.bip01_l_finger02
+    400086: valvebiped.bip01_l_finger1
+    400088: valvebiped.bip01_l_finger11
+    400090: valvebiped.bip01_l_finger12
+    400092: valvebiped.bip01_l_finger2
+    400094: valvebiped.bip01_l_finger21
+    400096: valvebiped.bip01_l_finger22
+    400098: valvebiped.bip01_l_finger3
+    400100: valvebiped.bip01_l_finger31
+    400102: valvebiped.bip01_l_finger32
+    400104: valvebiped.bip01_l_finger4
+    400106: valvebiped.bip01_l_finger41
+    400108: valvebiped.bip01_l_finger42
+    400110: valvebiped.bip01_l_foot
+    400112: valvebiped.bip01_l_forearm
+    400114: valvebiped.bip01_l_forearm_twist
+    400116: valvebiped.bip01_l_hand
+    400118: valvebiped.bip01_l_thigh
+    400120: valvebiped.bip01_l_toe0
+    400122: valvebiped.bip01_l_upperarm
+    400124: valvebiped.bip01_neck1
+    400126: valvebiped.bip01_pelvis
+    400128: valvebiped.bip01_r_calf
+    400130: valvebiped.bip01_r_clavicle
+    400132: valvebiped.bip01_r_finger0
+    400134: valvebiped.bip01_r_finger01
+    400136: valvebiped.bip01_r_finger02
+    400138: valvebiped.bip01_r_finger1
+    400140: valvebiped.bip01_r_finger11
+    400142: valvebiped.bip01_r_finger12
+    400144: valvebiped.bip01_r_finger2
+    400146: valvebiped.bip01_r_finger21
+    400148: valvebiped.bip01_r_finger22
+    400150: valvebiped.bip01_r_finger3
+    400152: valvebiped.bip01_r_finger31
+    400154: valvebiped.bip01_r_finger32
+    400156: valvebiped.bip01_r_finger4
+    400158: valvebiped.bip01_r_finger41
+    400160: valvebiped.bip01_r_finger42
+    400162: valvebiped.bip01_r_foot
+    400164: valvebiped.bip01_r_forearm
+    400166: valvebiped.bip01_r_forearm_twist
+    400168: valvebiped.bip01_r_hand
+    400170: valvebiped.bip01_r_thigh
+    400172: valvebiped.bip01_r_toe0
+    400174: valvebiped.bip01_r_upperarm
+    400176: valvebiped.bip01_spine
+    400178: valvebiped.bip01_spine1
+    400180: valvebiped.bip01_spine2
+    400182: valvebiped.j_mainroot
+    400184: valvebiped.tag_origin
+    400186: //RootNode
+    4300000: mesh7
+    4300002: mesh0
+    4300004: mesh2
+    4300006: mesh10
+    4300008: mesh5
+    4300010: mesh6
+    4300012: mesh4
+    4300014: mesh1
+    4300016: mesh9
+    4300018: mesh3
+    4300020: mesh8
+    7400000: Hazmat_TempMotion
+    9500000: //RootNode
+    13700000: mesh0
+    13700002: mesh1
+    13700004: mesh10
+    13700006: mesh2
+    13700008: mesh3
+    13700010: mesh4
+    13700012: mesh5
+    13700014: mesh6
+    13700016: mesh7
+    13700018: mesh8
+    13700020: mesh9
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: eyeball_l
+    second: {fileID: 2100000, guid: 4e685a016baf2d140baeaa4d813113fc, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: eyeball_r
+    second: {fileID: 2100000, guid: 620b1faef59559b428b141d64ad5b072, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: hazmat_alpha_a_col
+    second: {fileID: 2100000, guid: 120efe0724330ec4cad1ae52b8f56aad, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: hazmat_boot_a_col
+    second: {fileID: 2100000, guid: 06111affc09af60419318ac9f67c880e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: hazmat_gloves_a_col
+    second: {fileID: 2100000, guid: b07519890255d9f4d9fe9f86f2eed1e6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: hazmat_headgear_a_col
+    second: {fileID: 2100000, guid: c06fa0cd9883dbd48b4ea5093120f8ad, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: hazmat_loadout_a_col
+    second: {fileID: 2100000, guid: 38a91ff825054dd4c9fc4e69f989af6a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: hazmat_lowerbody_a_col
+    second: {fileID: 2100000, guid: 6a66f47661c98764891b30b8d118fee1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: hazmat_upper_body_a_col
+    second: {fileID: 2100000, guid: 7c4156eeffb2cbe4c9770dc42d4504db, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mp_head_a_col
+    second: {fileID: 2100000, guid: 0476daa24d0e6d64e8f7bd702b49f992, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: shiny_lense_col
+    second: {fileID: 2100000, guid: 3421f4c8c83383249883c3efd24547ce, type: 2}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Hazmat_TempMotion
+      takeName: Hazmat_TempMotion
+      firstFrame: 0
+      lastFrame: 679.02
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
