@@ -1,19 +1,31 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System;
+﻿using System;
 
-public class MenuSludge : Sludge {
-    public event Action eatenAction = delegate { };
-    protected override void CustomStart() {}
+namespace GameJam.BB2018
+{
+    public class MenuSludge : Sludge
+    {
+        public event Action eatenAction;
 
-    protected override void Eaten() {
-        gameObject.SetActive(false);
-        if (eatenAction != null) {
-            eatenAction();
+        protected override void CustomStart()
+        {
+            // do nothing
         }
-        playerSwing.GetComponent<Swing>().playerHand.SludgeAbsorb(this);
-    }
 
-    protected override void Movement() {}
+        protected override void Eaten()
+        {
+            gameObject.SetActive(false);
+
+            if (eatenAction != null)
+            {
+                eatenAction();
+            }
+
+            _playerSwing.GetComponent<Swing>().playerHand.SludgeAbsorb(this);
+        }
+
+        protected override void Movement()
+        {
+            // do nothing
+        }
+    }
 }

@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 3edf6d6410f6b9e47958966f3e81535e
-timeCreated: 1517086685
+guid: eb1dc04e2d3aa004f86f277fbcb982c9
+timeCreated: 1649209246
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
@@ -10,18 +10,13 @@ ModelImporter:
     2300000: //RootNode
     3300000: //RootNode
     4300000: Virus001
-    7400000: Virus001|Virus001Action
-    7400002: Virus001|Virus001Action.001
-    7400004: Virus001|Virus001Action.002
-    7400006: Virus001|Virus001Action.003
-    7400008: Virus001|Virus001Action.004
     9500000: //RootNode
   externalObjects:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: No Name
-    second: {fileID: 2100000, guid: abbd88798cc396f4397a9c098d7f8e70, type: 2}
+    second: {fileID: 2100000, guid: 223a23f1f68792b41b349c4cc44271f8, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
@@ -51,7 +46,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 0.03
+    globalScale: 1
     meshCompression: 0
     addColliders: 0
     importVisibility: 1
@@ -68,7 +63,7 @@ ModelImporter:
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
-    useFileScale: 0
+    useFileScale: 1
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0

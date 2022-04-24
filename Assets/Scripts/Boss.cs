@@ -1,275 +1,411 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class Boss : MonoBehaviour {
+namespace GameJam.BB2018
+{
+	public class Boss : MonoBehaviour
+	{
+		public enum BossStates
+		{
+			PATROL,
+			FIGHT_INTRO,
+			FIGHT,
+			DEAD
+		};
 
-	public AudioClip[] footstepSounds;
-	public AudioClip[] tauntSounds;
-	public AudioClip[] hurtSounds;
-	public AudioClip flameThrowerSound;
+		[SerializeField] private AudioSource sfxAudioSource;
+		[SerializeField] private AudioSource voiceAudioSource;
+		[SerializeField] private AudioClip[] footstepSounds;
+		[SerializeField] private AudioClip conversationSound;
+		[SerializeField] private AudioClip[] fightIntroSounds;
+		[SerializeField] private AudioClip[] tauntSounds;
+		[SerializeField] private AudioClip[] hurtSounds;
+		[SerializeField] private AudioClip deathSound;
+		[SerializeField] private AudioClip flameThrowerSound;
+		[SerializeField] private Transform playerTransform;
 
-	public Transform bossFightStart;
+		[SerializeField] private Transform bossFightStart;
+		[SerializeField] private float maxHealth;
+		[SerializeField] private float vulnerability; // damage a virus hit does
 
-	public float maxHealth;
-	public float vulnerability;		// damage a virus hit does
-	public float staggerChance;
+		[SerializeField] private Transform[] patrolWaypoints;
+		[SerializeField] private Transform[] fightWaypoints;
+		[SerializeField] private float turnSpeed;
+		[SerializeField] private float runSpeed;
+		[SerializeField] private float walkSpeed;
+		[SerializeField] private float currentHealth;
 
-	public Transform[] patrolWaypoints;
-	public Transform[] fightWaypoints;
-	public float turnSpeed;
-	public float runSpeed;
-	public float walkSpeed;
+		private BossStates _state = BossStates.PATROL; // first seen patrolling
+		private ParticleSystem[] _flameThowerParticles;
+		private Animator _animator;
 
-	private enum BossStates {
-		BOSS_PATROL,
-		BOSS_INTRO,
-		BOSS_FIGHT,
-		BOSS_DEAD
-	};
-	private BossStates bossState = BossStates.BOSS_PATROL;					// first seen patrolling
+		private Transform _currentWaypointTarget;
+		private float _moveSpeed;
+		private bool _flamethrowerActive = false;
+		private bool _atWaypoint = false;
+		private bool _attacking = false;
+		private bool _taunting = false;
+		private bool _staggered = false;
 
-	private ParticleSystem[] flameThowerParticles;
-	private AudioSource audioSource;
-	private Animator animator;
+		// animator triggers
+		private readonly int _introTriggerParameter = Animator.StringToHash("Intro");
+		private readonly int _attackTriggerParameter = Animator.StringToHash("Attack");
+		private readonly int _staggerTriggerParameter = Animator.StringToHash("Stagger");
+		private readonly int _tauntTriggerParameter = Animator.StringToHash("Taunt");
+		private readonly int _dieTriggerParameter = Animator.StringToHash("Die");
+		private readonly int _patrolTriggerParameter = Animator.StringToHash("Patrol");
+		private readonly int _patrolIdleTriggerParameter = Animator.StringToHash("PatrolIdle");
+		private readonly int _runTriggerParameter = Animator.StringToHash("Run");
 
-	// animator triggers
-	private int introHash 		= Animator.StringToHash( "Intro" );
-	private int attackHash		= Animator.StringToHash( "Attack" );
-	private int staggerHash 	= Animator.StringToHash( "Stagger" );
-	private int tauntHash 		= Animator.StringToHash ("Taunt");
-	private int dieHash 		= Animator.StringToHash ("Die");
-	private int patrolHash		= Animator.StringToHash( "Patrol");
-	private int idleHash		= Animator.StringToHash( "Idle");
+		private readonly float FACING_THRESHOLD = Mathf.Cos(45.0f * Mathf.Deg2Rad);
 
-	private Transform playerTransform;
-	private Transform currentWaypointTarget;
-	private Transform oldWaypointTarget;
-	private float moveSpeed;
-	private bool atWaypoint = false;										// positioned off its first waypoint
-	private bool taunting = false;
-    [HideInInspector]
-	public bool attacking = false;
-	private bool zeroingIn = false;
+		public BossStates State { get { return _state; } }
+		public bool Attacking { get { return _flamethrowerActive; } }
 
-	public float currentHealth;
+		private void Start()
+		{
+			_flameThowerParticles = GetComponentsInChildren<ParticleSystem>();
+			_animator = GetComponent<Animator>();
+			currentHealth = maxHealth;
+			StartPatrolWalk();
+		}
 
-	void Start () {
-		flameThowerParticles = GetComponentsInChildren<ParticleSystem> ();
-		audioSource = GetComponent<AudioSource> ();
-		animator = GetComponent<Animator> ();
-		playerTransform = GameObject.FindGameObjectWithTag ("Player").transform;				// find and track the player
-		currentHealth = maxHealth;
-		moveSpeed = walkSpeed;
-		currentWaypointTarget = patrolWaypoints [Random.Range (0, patrolWaypoints.Length)];		// start off patrolling
-	}
+		private void ClearAnimationTriggers()
+		{
+			_animator.ResetTrigger(_introTriggerParameter);
+			_animator.ResetTrigger(_attackTriggerParameter);
+			_animator.ResetTrigger(_staggerTriggerParameter);
+			_animator.ResetTrigger(_tauntTriggerParameter);
+			_animator.ResetTrigger(_dieTriggerParameter);
+			_animator.ResetTrigger(_patrolIdleTriggerParameter);
+			_animator.ResetTrigger(_runTriggerParameter);
+		}
 
-	// state handling
-	private bool derp = false;
-	void Update () {
-		/*if (!derp && Input.GetKeyDown (KeyCode.Space)) {
-			print ("space!");
-			MoveToIntro ();
-			derp = true;
-			return;
-		}*/
+		private void ClearActions()
+		{
+			_attacking = false;
+			_taunting = false;
+			_staggered = false;
+			StopFlames();
+		}
 
-		/*if (Input.GetKeyDown (KeyCode.H)) {
-			currentHealth -= vulnerability;
+		// primarily called by Fight Intro state animation events
+		public void SetMoveSpeed(float moveSpeed)
+		{
+			_moveSpeed = moveSpeed;
+		}
 
-			if (currentHealth <= 0) {
-				animator.SetTrigger (dieHash);
-				bossState = BossStates.BOSS_DEAD;
-			} else if (Random.Range (0.0f, 1.0f) >= 0.5) {
-				animator.SetTrigger (staggerHash);
-			}
-		}*/
-			
-		switch (bossState) {
-			case BossStates.BOSS_PATROL: {
-				if (!atWaypoint)
-					MoveToWaypoint ();
-				else
-					moveSpeed = 0.0f;
-				break;
-			}
-
-			case BossStates.BOSS_FIGHT: {
-				if (!atWaypoint) {
-					MoveToWaypoint ();		// This happens right after intro
-				} else { 
-					Vector3 playerDirection = (playerTransform.position - transform.position).normalized;
-
-					bool facingPlayer = false;
-					// only try the raycast if the forward is w/in 45 degrees of directly looking at the player
-					if (Vector3.Dot(playerDirection, transform.forward) > 0.707f) {
-                        //RaycastHit hit;
-                        //facingPlayer = (Physics.Raycast (transform.position, playerDirection, out hit, 1000.0f) && hit.collider.transform == playerTransform);
-                        facingPlayer = true;
+		private void Update()
+		{
+			switch (_state)
+			{
+				case BossStates.PATROL:
+				{
+					if (!_atWaypoint)
+					{
+						MoveTowardWaypoint();
 					}
-                    //Debug.Log(facingPlayer);
-					if (!attacking && facingPlayer) {	
-						print ("FACING");
-						animator.SetTrigger (attackHash);
-						attacking = true;
-						zeroingIn = false;
-					} else {
-						if (!zeroingIn) {
-							animator.SetTrigger (patrolHash);
-							zeroingIn = true;
-						}
-
-						moveSpeed = walkSpeed;
-						Quaternion targetRotation = Quaternion.LookRotation (playerDirection, Vector3.up);			// TODO: possible issue with up direction
-						Quaternion outputRotation = Quaternion.RotateTowards(transform.rotation, targetRotation, turnSpeed * Time.deltaTime);
-						outputRotation.x = 0.0f;
-						outputRotation.z = 0.0f;
-						transform.rotation = outputRotation;
-					}
+					break;
 				}
-				break;
-			}
-
-			case BossStates.BOSS_INTRO: { 
-				// animation events in Intro set the moveSpeed
-				transform.position += transform.forward * moveSpeed * Time.deltaTime;
-				break;
-			}
-				
-			case BossStates.BOSS_DEAD: { 
-				// just be dead
-				break;
+				case BossStates.FIGHT_INTRO:
+				{
+					// fightIntroSpeed is controlled on an animation curve
+					// no waypoint needed, just move straight ahead
+					transform.position += transform.forward * _moveSpeed * Time.deltaTime;
+					break;
+				}
+				case BossStates.FIGHT:
+				{
+					if (!_atWaypoint && !_staggered)
+					{
+						MoveTowardWaypoint();
+					}
+					else if (MoveToFacePlayer())
+					{
+						ChooseAttack();
+					}
+					break;
+				}
 			}
 		}
-	}
 
-	// animation event in intro
-	public void IntroHold() {
-		moveSpeed = 0.0f;
-	}
-
-	// animation event in intro
-	public void IntroMove() {
-		moveSpeed = walkSpeed;
-	}
-
-	public void ShootFlames() {
-		SoundManager.instance.PlayLocalSoundFx (flameThrowerSound, audioSource, true);
-		foreach (ParticleSystem p in flameThowerParticles) {
-			p.gameObject.SetActive (true);
-			p.Play ();
+		public void ShootFlames()
+		{
+			if (!_flamethrowerActive)
+			{
+				SoundManager.PlayLocalSoundFx(flameThrowerSound, sfxAudioSource, true);
+				foreach (ParticleSystem p in _flameThowerParticles)
+				{
+					p.gameObject.SetActive(true);
+					p.Play();
+				}
+				_flamethrowerActive = true;
+			}
 		}
-	}
 
-	public void StopFlames () {
-		SoundManager.instance.PlayLocalSoundFx (null, audioSource, false);
-		foreach (ParticleSystem p in flameThowerParticles) {
-			ParticleSystem.MainModule main = p.main;
-			main.stopAction = ParticleSystemStopAction.Disable;
-			p.Stop (true);
+		public void StopFlames()
+		{
+			if (_flamethrowerActive)
+			{
+				SoundManager.StopLocalSoundFx(sfxAudioSource);
+				foreach (ParticleSystem p in _flameThowerParticles)
+				{
+					ParticleSystem.MainModule main = p.main;
+					main.stopAction = ParticleSystemStopAction.Disable;
+					p.Stop(true);
+				}
+				_flamethrowerActive = false;
+			}
 		}
-	}
 
-	public void PlayHurtSound() {
-		SoundManager.instance.PlayLocalSoundFx (hurtSounds [Random.Range (0, hurtSounds.Length)], audioSource);
-	}
+		private void StartPatrolWalk()
+		{
+			ClearAnimationTriggers();
+			ClearActions();
+			_state = BossStates.PATROL;
+			FindNewWaypoint();
+		}
 
+		private void StartPatrolIdle()
+		{
+			ClearAnimationTriggers();
+			ClearActions();
+			_animator.SetTrigger(_patrolIdleTriggerParameter);
+		}
 
-	public void PlayFootStepSound () {
-		SoundManager.instance.PlayLocalSoundFx (footstepSounds [Random.Range (0, footstepSounds.Length)], audioSource);
-	}
+		// animation event in Patrol_Idle
+		public void FinishPatrolIdle()
+		{
+			FindNewWaypoint();
+		}
 
-	public void PlayTauntSound () {
-		SoundManager.instance.PlayLocalSoundFx (tauntSounds [Random.Range (0, tauntSounds.Length)], audioSource);
-	}
+		// called by GameManager
+		public void StartFightIntro()
+		{
+			// "teleport" into the elevator
+			ClearAnimationTriggers();
+			ClearActions();
+			currentHealth = maxHealth;
+			transform.position = bossFightStart.position;
+			transform.rotation = bossFightStart.rotation;
+			PlayFightIntroSound();
+			_state = BossStates.FIGHT_INTRO;
+			_animator.SetTrigger(_introTriggerParameter);
+		}
 
-	// animation event in Taunt
-	public void FinishTaunt() {
-		print ("NO TAUNT.");
-		taunting = false;
-	}
-
-	// animation event in Attack
-	public void FinishAttack() {
-		attacking = false;
-		atWaypoint = Random.Range (0, 1) > 0.8f;	// 20% chance of double-attack from same waypoint
-		if (!atWaypoint)
-			FindNewWaypoint ();
-	}
-
-	public void AllowPatrol() {
-		atWaypoint = false;
-		animator.SetTrigger (patrolHash);			// only start moving again once the idle->patrol transition finishes (atWaypoint = false allow move)
-		FindNewWaypoint ();
-	}
-
-	// TODO: gamemanager calls this
-	public void MoveToIntro() {
-		// "teleport" into the elevator
-		transform.position = bossFightStart.position;
-		transform.rotation = bossFightStart.rotation;
-		animator.SetTrigger (introHash);
-		bossState = BossStates.BOSS_INTRO;
-	}
-
-	// animation event in intro
-	public void StartFight() {
-		currentWaypointTarget = fightWaypoints [Random.Range (0, fightWaypoints.Length)];
-		bossState = BossStates.BOSS_FIGHT;
-		atWaypoint = false;
-	}
-
-	void MoveToWaypoint() {
-		if (bossState == BossStates.BOSS_FIGHT) {
-			moveSpeed = runSpeed;
+		// animation event in Intro
+		public void StartFight()
+		{
+			ClearAnimationTriggers();
+			ClearActions();
+			_state = BossStates.FIGHT;
 			turnSpeed = 100;
-		} else {
-			moveSpeed = walkSpeed;
-			turnSpeed = 50;
+			FindNewWaypoint();
 		}
 
-		Vector3 towards = (currentWaypointTarget.position - transform.position).normalized;
-		Quaternion targetRotation = Quaternion.LookRotation (towards);
-		Quaternion outputRotation = Quaternion.RotateTowards(transform.rotation, targetRotation, turnSpeed * Time.deltaTime);
-		outputRotation.x = 0.0f;
-		outputRotation.z = 0.0f;
-		transform.rotation = outputRotation;
-		Vector3 delta = transform.forward * moveSpeed * Time.deltaTime * Mathf.Pow( Mathf.Clamp01 (Vector3.Dot (transform.forward, towards)), 0.2f);
-		delta.Scale (new Vector3 (1, 0, 1));
-		transform.position += delta;		// always move forward, the rotation takes care of tracking to the waypoint
-	}
+		private void StartTaunt()
+		{
+			ClearAnimationTriggers();
+			ClearActions();
+			PlayTauntSound();
+			_animator.SetTrigger(_tauntTriggerParameter);
+			_taunting = true;
+		}
 
-	void FindNewWaypoint() {
-		oldWaypointTarget = currentWaypointTarget;
-		do {
-			if (bossState == BossStates.BOSS_FIGHT) {
-				currentWaypointTarget = fightWaypoints [Random.Range (0, fightWaypoints.Length)];
-			} else {
-				currentWaypointTarget = patrolWaypoints [Random.Range (0, patrolWaypoints.Length)];
+		// animation event in Taunt
+		public void FinishTaunt()
+		{
+			_taunting = false;
+			FindNewWaypoint();
+		}
+
+		private void StartAttack()
+        {
+			ClearAnimationTriggers();
+			ClearActions();
+			_animator.SetTrigger(_attackTriggerParameter);
+			_attacking = true;
+		}
+
+		// animation event in Attack
+		public void FinishAttack()
+		{
+			_attacking = false;
+			// 20% chance of double-attack from same waypoint
+			if (Random.Range(0, 1) <= 0.8f)
+			{
+				FindNewWaypoint();
 			}
-		} while (currentWaypointTarget == oldWaypointTarget);
-	}
-
-	void OnCollisionEnter(Collision collision) {
-	}
-
-	// waypoint traversal
-	void OnTriggerEnter(Collider collider) {
-		if (collider.transform == currentWaypointTarget) {
-			atWaypoint = true;
-			animator.SetTrigger (idleHash);
 		}
-        Swing swingObject = collider.gameObject.GetComponent<Swing>();
 
-        if (swingObject && swingObject.canDamage) {
-            currentHealth -= vulnerability;
+		private void StartStagger()
+		{
+			ClearAnimationTriggers();
+			ClearActions();
+			PlayHurtSound();
+			_staggered = true;
+			_animator.SetTrigger(_staggerTriggerParameter);
+		}
 
-            if (currentHealth <= 0) {
-                animator.SetTrigger(dieHash);
-                bossState = BossStates.BOSS_DEAD;
-            } else if (Random.Range(0.0f, 1.0f) >= staggerChance) {
-                animator.SetTrigger(staggerHash);
-            }
-        }
-    }
+		// animation event in Stagger
+		public void FinishStagger()
+		{
+			_staggered = false;
+
+			if (currentHealth <= 0.0f)
+			{
+				StartDeath();
+			}
+			else
+			{
+				FindNewWaypoint();
+			}
+		}
+
+		private void StartDeath()
+		{
+			ClearAnimationTriggers();
+			ClearActions();
+			PlayDeathSound();
+			_state = BossStates.DEAD;
+			_animator.SetTrigger(_dieTriggerParameter);
+		}
+
+		private void ChooseAttack()
+		{
+			if (!_taunting && !_attacking && !_staggered)
+			{
+				if (Random.value > 0.5f)
+				{
+					StartTaunt();
+				}
+				else
+				{
+					StartAttack();
+				}
+			}
+		}
+
+		private bool MoveToFacePlayer()
+		{
+			Vector3 playerDirection = (playerTransform.position - transform.position).normalized;
+			Quaternion targetRotation = Quaternion.LookRotation(playerDirection, Vector3.up);
+			Quaternion outputRotation = Quaternion.RotateTowards(transform.rotation, targetRotation, turnSpeed * Time.deltaTime);
+			outputRotation.x = 0.0f;
+			outputRotation.z = 0.0f;
+			transform.rotation = outputRotation;
+
+			return Vector3.Dot(playerDirection, transform.forward) > FACING_THRESHOLD;
+		}
+
+		private void MoveTowardWaypoint()
+		{
+			_moveSpeed = _state == BossStates.FIGHT ? runSpeed : walkSpeed;
+
+			Vector3 towards = (_currentWaypointTarget.position - transform.position).normalized;
+			Quaternion targetRotation = Quaternion.LookRotation(towards);
+			Quaternion outputRotation = Quaternion.RotateTowards(transform.rotation, targetRotation, turnSpeed * Time.deltaTime);
+			outputRotation.x = 0.0f;
+			outputRotation.z = 0.0f;
+			transform.rotation = outputRotation;
+			Vector3 delta = transform.forward * _moveSpeed * Time.deltaTime * Mathf.Pow(Mathf.Clamp01(Vector3.Dot(transform.forward, towards)), 0.2f);
+			delta.Scale(new Vector3(1, 0, 1));
+			transform.position += delta; // always move forward, the rotation takes care of tracking to the waypoint
+		}
+
+		private void FindNewWaypoint()
+		{
+			Transform[] waypoints = null;
+			Transform oldWaypointTarget = _currentWaypointTarget;
+			_atWaypoint = false;
+			ClearActions();
+
+			if (_state == BossStates.FIGHT)
+			{
+				_animator.SetTrigger(_runTriggerParameter);
+				waypoints = fightWaypoints;
+			}
+			else
+			{
+				_animator.SetTrigger(_patrolTriggerParameter);
+				waypoints = patrolWaypoints;
+			}
+
+			do
+			{
+				_currentWaypointTarget = waypoints[Random.Range(0, waypoints.Length)];
+			} while (_currentWaypointTarget == oldWaypointTarget);
+		}
+
+		private void OnTriggerEnter(Collider collider)
+		{
+			if (_state != BossStates.DEAD)
+			{
+				CheckWaypointHit(collider);
+				CheckTakeDamage(collider);
+			}
+		}
+
+		private void CheckWaypointHit(Collider collider)
+		{
+			if (collider.transform == _currentWaypointTarget)
+			{
+				_atWaypoint = true;
+				_moveSpeed = 0.0f;
+
+				if (_state == BossStates.PATROL)
+				{
+					StartPatrolIdle();
+				}
+				//else if (_state == BossStates.FIGHT)
+				//{
+				//	ClearAnimationTriggers();
+				//	ClearActions();
+				//	_animator.SetTrigger(_patrolTriggerParameter);
+				//}
+			}
+		}
+
+		private void CheckTakeDamage(Collider collider)
+		{
+			Swing swingObject = collider.GetComponent<Swing>();
+
+			if (_state == BossStates.FIGHT && 
+				swingObject != null && 
+				swingObject.CanDamage)
+			{
+				currentHealth -= vulnerability;
+				StartStagger();
+			}
+		}
+
+		public void PlayConversation()
+		{
+			SoundManager.PlayLocalSoundFx(conversationSound, voiceAudioSource);
+		}
+
+		public void PlayFightIntroSound()
+		{
+			SoundManager.PlayLocalSoundFx(fightIntroSounds[Random.Range(0, fightIntroSounds.Length)], voiceAudioSource);
+		}
+
+		public void PlayHurtSound()
+		{
+			SoundManager.PlayLocalSoundFx(hurtSounds[Random.Range(0, hurtSounds.Length)], voiceAudioSource);
+		}
+
+		public void PlayFootStepSound()
+		{
+			SoundManager.PlayLocalSoundFx(footstepSounds[Random.Range(0, footstepSounds.Length)], sfxAudioSource);
+		}
+
+		public void PlayTauntSound()
+		{
+			SoundManager.PlayLocalSoundFx(tauntSounds[Random.Range(0, tauntSounds.Length)], voiceAudioSource);
+		}
+
+		public void PlayDeathSound()
+		{
+			SoundManager.PlayLocalSoundFx(deathSound, voiceAudioSource);
+		}
+	}
 }

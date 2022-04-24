@@ -1,85 +1,118 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Audio;
 
-public class SoundManager : MonoBehaviour {
+namespace GameJam.BB2018
+{
+	public class SoundManager : MonoBehaviour
+	{
+		private static SoundManager _instance;
 
-	public AudioSource musicSource;
-	public AudioSource globalSFxSource;
-	public AudioMixer sfxMixer;			// control the volume only
+		public AudioSource musicSource;
+		public AudioSource globalSFxSource;
+		public AudioMixer sfxMixer;         // control the volume only
 
-	public static SoundManager instance = null;
+		private float _savedSfxAttenuation = 0.0f;
+		private float _savedMusicVolume = 1.0f;
 
-	private float savedSfxAttenuation = 0.0f;
-	private float savedMusicVolume = 1.0f;
+		private const string ATTENUTATION = "Attenuation";
 
-	void Awake () {
-		if (instance == null) {
-			instance = this;
-			DontDestroyOnLoad(gameObject);
-		} else if (instance != this) {
-			Destroy (gameObject);	
+		private void Awake()
+		{
+			if (_instance == null)
+			{
+				_instance = this;
+				DontDestroyOnLoad(gameObject);
+			}
+			else if (_instance != this)
+			{
+				Destroy(gameObject);
+			}
 		}
-	}
 
-	public void PlayLocalSoundFx (AudioClip soundFx, AudioSource source, bool loop = false) {
-		source.loop = loop;
-		source.clip = soundFx;
-		source.Play ();
-	}
-
-	public void PlayGlobalSoundFx (AudioClip soundFx, bool loop = false) {
-		instance.globalSFxSource.loop = loop;
-		instance.globalSFxSource.clip = soundFx;
-		instance.globalSFxSource.Play ();
-	}
-
-	public void PlayMusic(AudioClip music, bool loop = true) {
-		instance.musicSource.loop = loop;
-		instance.musicSource.clip = music;
-		instance.musicSource.Play ();
-	}
-
-	public void ToggleMasterMute() {
-		instance.musicSource.mute = !instance.musicSource.mute;
-		if (!instance.musicSource.mute) {
-			instance.musicSource.volume = instance.savedMusicVolume;
-			instance.sfxMixer.SetFloat ("Attenuation", instance.savedSfxAttenuation);
-		} else {
-			instance.sfxMixer.SetFloat ("Attenuation", -80.0f);
+		public static void PlayLocalSoundFx(AudioClip soundFx, AudioSource source, bool loop = false)
+		{
+			source.loop = loop;
+			source.clip = soundFx;
+			source.Play();
 		}
-	}
 
-	public bool isMuted {
-		get {
-			return instance.musicSource.mute;
+		public static void StopLocalSoundFx(AudioSource source)
+		{
+			source.loop = false;
+			source.clip = null;
+			source.Stop();
 		}
-	}
-		
-	public float musicVolume {
-		get { 
-			return instance.savedMusicVolume;
-		}
-	}
 
-	public float sfxVolume {
-		get { 
-			return instance.savedSfxAttenuation;
+		public static void PlayGlobalSoundFx(AudioClip soundFx, bool loop = false)
+		{
+			_instance.globalSFxSource.loop = loop;
+			_instance.globalSFxSource.clip = soundFx;
+			_instance.globalSFxSource.Play();
 		}
-	}
-			
-	// min 0, max 1 range set in UI slider
-	public void SetMusicVolume(float volume) {
-		instance.savedMusicVolume = volume;
-		if (!isMuted)
-			instance.musicSource.volume = instance.savedMusicVolume;
-	}
 
-	// min -80, max 0 range set in UI slider and mixer properties
-	public void SetSFxVolume(float attenuation) {
-		instance.savedSfxAttenuation = attenuation;
-		if (!isMuted)
-			instance.sfxMixer.SetFloat ("Attenuation", instance.savedSfxAttenuation);
+		public static void PlayMusic(AudioClip music, bool loop = true)
+		{
+			_instance.musicSource.loop = loop;
+			_instance.musicSource.clip = music;
+			_instance.musicSource.Play();
+		}
+
+		public static void ToggleMasterMute()
+		{
+			_instance.musicSource.mute = !_instance.musicSource.mute;
+			if (!_instance.musicSource.mute)
+			{
+				_instance.musicSource.volume = _instance._savedMusicVolume;
+				_instance.sfxMixer.SetFloat(ATTENUTATION, _instance._savedSfxAttenuation);
+			}
+			else
+			{
+				_instance.sfxMixer.SetFloat(ATTENUTATION, -80.0f);
+			}
+		}
+
+		public static bool IsMuted
+		{
+			get
+			{
+				return _instance.musicSource.mute;
+			}
+		}
+
+		public static float MusicVolume
+		{
+			get
+			{
+				return _instance._savedMusicVolume;
+			}
+		}
+
+		public static float SfxVolume
+		{
+			get
+			{
+				return _instance._savedSfxAttenuation;
+			}
+		}
+
+		// min 0, max 1 range set in UI slider
+		public static void SetMusicVolume(float volume)
+		{
+			_instance._savedMusicVolume = volume;
+			if (!IsMuted)
+			{
+				_instance.musicSource.volume = _instance._savedMusicVolume;
+			}
+		}
+
+		// min -80, max 0 range set in UI slider and mixer properties
+		public static void SetSFxVolume(float attenuation)
+		{
+			_instance._savedSfxAttenuation = attenuation;
+			if (!IsMuted)
+			{
+				_instance.sfxMixer.SetFloat(ATTENUTATION, _instance._savedSfxAttenuation);
+			}
+		}
 	}
 }

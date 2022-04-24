@@ -1,5 +1,7 @@
-﻿Shader "Custom/Blob" {
-	Properties {
+﻿Shader "Custom/Blob" 
+{
+	Properties 
+	{
 		_Color ("Color", COLOR) = (1,1,1,1)
 		_Spec ("Specular Color", COLOR) = (.5, .5, .5, 1)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
@@ -13,7 +15,8 @@
 		_Body ("Body Thickness", RANGE(0, 1)) = 0
 		_Blobbiness("Blobbiness", FLOAT) = 0
 	}
-	SubShader {
+	SubShader 
+		{
 		Tags { "RenderType"="Transparent" "Queue"="Transparent"}
 		LOD 200
 		
@@ -28,14 +31,16 @@
 
 		sampler2D _MainTex, _NormalMap, _GrabTexture;
 
-		struct appdata {
+		struct appdata 
+		{
 			float4 vertex : POSITION;
 			float3 normal : NORMAL;
 			float2 texcoord: TEXCOORD0;
 			float4 tangent: TANGENT;
 		};
 
-		struct Input {
+		struct Input 
+		{
 			float2 uv_MainTex;
 			float2 grabPos;
 			float3 normal;
@@ -55,7 +60,8 @@
 			// put more per-instance properties here
 		UNITY_INSTANCING_CBUFFER_END
 
-		void vert(inout appdata v, out Input o) {
+		void vert(inout appdata v, out Input o) 
+		{
 			UNITY_INITIALIZE_OUTPUT(Input,o);
 			float4 osMorph = mul(unity_WorldToObject, _Morph);
 			float3	normalizedMorph = normalize(osMorph.xyz),
@@ -79,7 +85,8 @@
 			o.tangent = UnityObjectToViewPos(v.tangent);
 		}
 
-		void surf (Input IN, inout SurfaceOutputStandardSpecular o) {
+		void surf (Input IN, inout SurfaceOutputStandardSpecular o) 
+		{
 			fixed4 color = tex2D (_MainTex, IN.uv_MainTex) * _Color;
 			o.Albedo = color * color.a;
 			o.Smoothness = _Glossiness;

@@ -319,7 +319,7 @@ ModelImporter:
       name: Taunt
       takeName: Hazmat_TempMotion
       firstFrame: 0
-      lastFrame: 328
+      lastFrame: 327
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -341,14 +341,6 @@ ModelImporter:
       events:
       - time: 1
         functionName: FinishTaunt
-        data: 
-        objectReferenceParameter: {fileID: 11500000, guid: 2ed7ee5b78052084289982eec5f4d69d,
-          type: 3}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0
-        functionName: PlayTauntSound
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 2ed7ee5b78052084289982eec5f4d69d,
           type: 3}

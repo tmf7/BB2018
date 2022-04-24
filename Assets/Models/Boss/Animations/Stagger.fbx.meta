@@ -338,8 +338,8 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0
-        functionName: PlayHurtSound
+      - time: 0.7246377
+        functionName: FinishStagger
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 2ed7ee5b78052084289982eec5f4d69d,
           type: 3}

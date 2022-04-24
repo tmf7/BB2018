@@ -1,25 +1,30 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class ScaleProbeRange : MonoBehaviour {
-    private Vector3 originalSize;
-    private ReflectionProbe thisProbe;
-    private float prevScale;
-    private float originalScale;
-	// Use this for initialization
-	void Start () {
-        thisProbe = GetComponent<ReflectionProbe>();
-        originalSize = thisProbe.size;
-        originalScale = transform.lossyScale.x;
-        prevScale = originalScale;
-    }
-	
-	// Update is called once per frame
-	void Update () {
-        if (prevScale != transform.lossyScale.x) {
-            prevScale = transform.lossyScale.x;
-            thisProbe.size = originalSize * prevScale / originalScale;
+namespace GameJam.BB2018
+{
+    [RequireComponent(typeof(ReflectionProbe))]
+    public class ScaleProbeRange : MonoBehaviour
+    {
+        private ReflectionProbe _targetProbe;
+        private Vector3 _originalSize;
+        private float _prevScale;
+        private float _originalScale;
+
+        private void Start()
+        {
+            _targetProbe = GetComponent<ReflectionProbe>();
+            _originalSize = _targetProbe.size;
+            _originalScale = transform.lossyScale.x;
+            _prevScale = _originalScale;
+        }
+
+        private void Update()
+        {
+            if (_prevScale != transform.lossyScale.x)
+            {
+                _prevScale = transform.lossyScale.x;
+                _targetProbe.size = _originalSize * _prevScale / _originalScale;
+            }
         }
     }
 }

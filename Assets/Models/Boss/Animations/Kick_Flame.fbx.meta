@@ -340,19 +340,19 @@ ModelImporter:
       curves: []
       events:
       - time: 0
-        functionName: IntroHold
+        functionName: SetMoveSpeed
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 2ed7ee5b78052084289982eec5f4d69d,
           type: 3}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.13729511
-        functionName: IntroMove
+      - time: 0.14514674
+        functionName: SetMoveSpeed
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 2ed7ee5b78052084289982eec5f4d69d,
           type: 3}
-        floatParameter: 0
+        floatParameter: 1.5
         intParameter: 0
         messageOptions: 0
       - time: 0.1965602
@@ -395,8 +395,8 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.39959016
-        functionName: IntroHold
+      - time: 0.39251608
+        functionName: SetMoveSpeed
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 2ed7ee5b78052084289982eec5f4d69d,
           type: 3}

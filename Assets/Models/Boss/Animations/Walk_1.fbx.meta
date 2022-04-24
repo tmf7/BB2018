@@ -340,7 +340,7 @@ ModelImporter:
       curves: []
       events:
       - time: 1
-        functionName: AllowPatrol
+        functionName: FinishPatrolIdle
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 2ed7ee5b78052084289982eec5f4d69d,
           type: 3}

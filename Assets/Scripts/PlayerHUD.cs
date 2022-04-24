@@ -1,52 +1,58 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerHUD : MonoBehaviour {
+namespace GameJam.BB2018
+{
+	public class PlayerHUD : MonoBehaviour
+	{
+		public PlayerStats playerToWatch;
 
-    public PlayerStats playerToWatch;
+		[HideInInspector] public GameManager gameManager;
 
-    [HideInInspector]
-    public GameManager gameManager;
+		private Slider _timeSlider;
+		private Text[] _timeTexts;
+		private Text[] _healthTexts;
+		private int _oldSecondsValue;
+		private bool _timeIsRed = false;
 
-    private Slider timeSlider;
-	private Text[] timeTexts;
-	private Text[] healthTexts;
-	private int oldSecondsValue;
-	private bool timeIsRed = false;
-
-	void Start() {
-		timeSlider = GetComponentInChildren<Slider> ();
-		timeTexts = timeSlider.GetComponentsInChildren<Text> ();
-		healthTexts = GetComponentsInChildren<Text> ();
-	}
-
-	void Update() {
-		// time
-		timeSlider.normalizedValue = 1.0f - gameManager.NomalizedTime;
-		int minutes = gameManager.MinutesRemaining ();
-		int seconds = gameManager.SecondsRemaining();
-		string timeString = minutes.ToString () + ":" + (seconds >= 10 ? "" : "0" ) + seconds.ToString ();
-		timeTexts [0].text = timeString;
-		timeTexts [1].text = timeString;
-
-		// blink red
-		if (minutes == 0 && seconds != oldSecondsValue) {
-			if (!timeIsRed || seconds == 0) {
-				timeIsRed = true;
-				timeTexts [1].color = Color.red;
-			} else {
-				timeIsRed = false;
-				timeTexts [1].color = Color.white;
-			}
+		private void Start()
+		{
+			_timeSlider = GetComponentInChildren<Slider>();
+			_timeTexts = _timeSlider.GetComponentsInChildren<Text>();
+			_healthTexts = GetComponentsInChildren<Text>();
 		}
 
-		oldSecondsValue = seconds;
+		private void Update()
+		{
+			// time
+			_timeSlider.normalizedValue = 1.0f - gameManager.NomalizedTime;
+			int minutes = gameManager.MinutesRemaining();
+			int seconds = gameManager.SecondsRemaining();
+			string timeString = minutes.ToString() + ":" + (seconds >= 10 ? "" : "0") + seconds.ToString();
+			_timeTexts[0].text = timeString;
+			_timeTexts[1].text = timeString;
 
-		// health
-		string healthString = "Strength: " + Mathf.Round(playerToWatch.Health);
-		healthTexts [0].text = healthString;
-		healthTexts [1].text = healthString;
+			// blink red
+			if (minutes == 0 && seconds != _oldSecondsValue)
+			{
+				if (!_timeIsRed || seconds == 0)
+				{
+					_timeIsRed = true;
+					_timeTexts[1].color = Color.red;
+				}
+				else
+				{
+					_timeIsRed = false;
+					_timeTexts[1].color = Color.white;
+				}
+			}
+
+			_oldSecondsValue = seconds;
+
+			// health
+			string healthString = "Strength: " + Mathf.Round(playerToWatch.Health);
+			_healthTexts[0].text = healthString;
+			_healthTexts[1].text = healthString;
+		}
 	}
 }
